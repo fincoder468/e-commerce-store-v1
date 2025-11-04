@@ -1,11 +1,9 @@
-import { useEffect, useState } from 'react'
-import type { Product } from '../models/product';
-import { Catelog } from '../../features/catelog/Catelog';
+import { useState } from 'react'
 import { Box, Container, createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { NavBar } from './NavBar';
+import { Outlet } from 'react-router-dom';
 
 function App() {
-  const [products, setProducts] = useState<Product[]>([]);
   const [ darkMode, setDarkMode ] = useState(false);
   const paletteType = darkMode ? 'dark' : 'light';
   const theme = createTheme({
@@ -17,11 +15,6 @@ function App() {
     }
   })
   
-  useEffect(()=>{
-    fetch('https://localhost:5001/api/products')
-    .then(response=>response.json())
-    .then(data=>setProducts(data));
-  }, [])
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -40,7 +33,7 @@ function App() {
         py: 6
       }}>
       <Container maxWidth="xl" sx={{mt: 8}}>
-      <Catelog products={products}/>
+        <Outlet />
     </Container>
     </Box>
     
