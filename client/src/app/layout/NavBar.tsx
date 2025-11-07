@@ -1,6 +1,10 @@
 import { DarkMode, LightMode, ShoppingCart } from "@mui/icons-material"
-import { AppBar, Badge, Box, IconButton, List, ListItem, Toolbar, Typography } from "@mui/material"
+import { AppBar, Badge, Box, IconButton, LinearProgress, List, ListItem, Toolbar, Typography } from "@mui/material"
+import type { AppDispatch, RootState } from "../../app/store/store";
+import { useDispatch, useSelector } from "react-redux"
 import { NavLink } from "react-router-dom"
+import { setDarkMode } from "./uiSlice";
+
 
 const midLinks = [
     {title: 'catalog', path: '/catalog'},
@@ -21,13 +25,9 @@ const navStyles = {
     '&.active': {color:'#baecf9'}
 }
 
-type Props = {
-    toggleDarkMode: () => void;
-    darkMode: boolean;
-}
-
-export const NavBar = ({darkMode, toggleDarkMode} : Props) => {
-
+export const NavBar = () => {
+    const {isLoading, darkMode} =  useSelector((state: RootState) => state.ui);
+    const dispatch = useDispatch<AppDispatch>();
     return (
         <AppBar position="fixed">
             <Toolbar sx={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
@@ -35,7 +35,7 @@ export const NavBar = ({darkMode, toggleDarkMode} : Props) => {
                     <Typography component={NavLink} to='/' sx = {navStyles} variant="h6">
                         Re-store
                     </Typography>
-                    <IconButton onClick={toggleDarkMode} sx={{ml:2}}>
+                    <IconButton onClick={()=> dispatch(setDarkMode())} sx={{ml:2}}>
                         {darkMode ? <DarkMode /> : <LightMode sx= {{color:'yellow'}}/> }
                     </IconButton>
                 </Box>
@@ -75,6 +75,11 @@ export const NavBar = ({darkMode, toggleDarkMode} : Props) => {
                 </Box>
                 
             </Toolbar>
+            { isLoading && (
+                <Box sx={{width: '100%', position: 'absolute', bottom:0 }}>
+                    <LinearProgress color="secondary" />
+                </Box>
+            )}
         </AppBar>
     )
 }
