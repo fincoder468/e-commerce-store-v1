@@ -2,9 +2,9 @@ import { DarkMode, LightMode, ShoppingCart } from "@mui/icons-material"
 import { AppBar, Badge, Box, IconButton, LinearProgress, List, ListItem, Toolbar, Typography } from "@mui/material"
 import type { AppDispatch, RootState } from "../../app/store/store";
 import { useDispatch, useSelector } from "react-redux"
-import { NavLink } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 import { setDarkMode } from "./uiSlice";
-
+import { useFetchBasketQuery } from "../../features/basket/basketApi";
 
 const midLinks = [
     {title: 'catalog', path: '/catalog'},
@@ -28,6 +28,9 @@ const navStyles = {
 export const NavBar = () => {
     const {isLoading, darkMode} =  useSelector((state: RootState) => state.ui);
     const dispatch = useDispatch<AppDispatch>();
+    const {data: basket} = useFetchBasketQuery();
+
+    const itemCount = basket?.items.reduce((sum, item) => sum+item.quantity, 0) || 0;
     return (
         <AppBar position="fixed">
             <Toolbar sx={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
@@ -54,8 +57,8 @@ export const NavBar = () => {
                 </List>
 
                 <Box display='flex' alignItems='center'>
-                    <IconButton size="large" sx ={{color:'inherit'}}>
-                    <Badge badgeContent={4} color="secondary">
+                    <IconButton component= {Link} to={"/basket"} size="large" sx ={{color:'inherit'}}>
+                    <Badge badgeContent={itemCount} color="secondary">
                         <ShoppingCart/>
                     </Badge>
 
