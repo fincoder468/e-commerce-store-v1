@@ -10,7 +10,7 @@ export const ProductList = ({products}:Props) => {
   return (
     <Grid container spacing={3}>
         {products.map((product) => (
-          <Grid size={3} display="flex">
+          <Grid key={product.id} size={3} display="flex">
             <ProductCard product={product} />
           </Grid>
         ))}

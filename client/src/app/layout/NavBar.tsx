@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link, NavLink } from "react-router-dom"
 import { setDarkMode } from "./uiSlice";
 import { useFetchBasketQuery } from "../../features/basket/basketApi";
+import { UserMenu } from "./UserMenu";
+import { useUserInfoQuery } from "../../features/account/accountApi";
 
 const midLinks = [
     {title: 'catalog', path: '/catalog'},
@@ -26,6 +28,7 @@ const navStyles = {
 }
 
 export const NavBar = () => {
+    const { data : user}= useUserInfoQuery();
     const {isLoading, darkMode} =  useSelector((state: RootState) => state.ui);
     const dispatch = useDispatch<AppDispatch>();
     const {data: basket} = useFetchBasketQuery();
@@ -63,7 +66,11 @@ export const NavBar = () => {
                     </Badge>
 
                     </IconButton>
-                    <List sx ={{display:'flex', ml:5}}>
+
+                    {user ? (
+                        <UserMenu user={user} />
+                    ) : (
+                        <List sx ={{display:'flex', ml:5}}>
                         {rightLinks.map(({title, path}) => (
                         <ListItem
                         component={NavLink}
@@ -75,6 +82,8 @@ export const NavBar = () => {
                         </ListItem>
                     ) )}
                     </List>
+                    )}
+                    
                 </Box>
                 
             </Toolbar>
